@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        APP_ENV = 'ci'
-        APP_NAME = 'DevOps Demo App CI'
-        DB_HOST = 'db'
-        DB_PORT = '3306'
-        DB_NAME = 'demo_app'
-        DB_USER = credentials('db_user')       // Jenkins credentials ID
-        DB_PASSWORD = credentials('db_password')
+        COMPOSE_FILE = 'docker/docker-compose.yml'
+        App_URL      = 'http://localhost:8081'
+        DB_HOST      = 'db'
+        DB_PORT      = '3306'
+        DB_NAME      = 'demo_app'
+        DB_USER      = 'demo_user'       // Jenkins credentials ID
+        DB_PASSWORD  = 'Train123#demo'
     }
 
     stages {
