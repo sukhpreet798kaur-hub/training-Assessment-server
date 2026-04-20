@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>DevOps Demo App - Home</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #020617;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.15);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2933;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border-subtle);
+      background: linear-gradient(to right, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.85));
+      backdrop-filter: blur(10px);
+      padding: 1.25rem 2rem;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+    }
+
+    header h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.03em;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      margin-right: 1rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 999px;
+      transition: color 0.2s ease, background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    nav a:hover {
+      color: #f9fafb;
+      background-color: rgba(56, 189, 248, 0.16);
+      transform: translateY(-1px);
+    }
+
+    nav a:active {
+      transform: translateY(0);
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3rem 1rem;
+    }
+
+    .card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+      border-radius: 1rem;
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+      max-width: 720px;
+      width: 100%;
+      padding: 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 0 0, var(--accent-soft), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.13), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background-color: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.8rem;
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      margin-bottom: 1rem;
+    }
+
+    .badge span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle, #22c55e 0, #16a34a 60%, transparent 100%);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p.lead {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .pill {
+      padding: 0.75rem 0.9rem;
+      border-radius: 0.75rem;
+      background-color: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.85rem;
+    }
+
+    .pill-title {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+      color: #e5e7eb;
+    }
+
+    .pill-desc {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: background-color 0.18s ease, transform 0.12s ease, box-shadow 0.18s ease;
+    }
+
+    .btn-primary {
+      background-image: linear-gradient(to right, #38bdf8, #6366f1);
+      color: #0b1120;
+      box-shadow: 0 14px 30px rgba(56, 189, 248, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(56, 189, 248, 0.6);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+    }
+
+    .btn-outline:hover {
+      color: #e5e7eb;
+      border-color: var(--accent);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      header {
+        padding: 1rem;
+      }
+      .card {
+        padding: 1.5rem 1.25rem;
+      }
+      header h1 {
+        font-size: 1.3rem;
+      }
+      nav a {
+        margin-right: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to the DevOps Demo Application</h1>
+    <nav>
+      <a href="/index.html">Home</a> |
+      <a href="/about.html">About</a> |
+      <a href="/contact.html">Contact</a> |
+      <a href="/info.php">App Info</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="badge">
+        <span class="dot"></span>
+        <span>Containerised PHP · MySQL · Jenkins</span>
+      </div>
+      <h2>DevOps Demo App</h2>
+      <p class="lead">
+        This application is a small PHP + MySQL website used to practice Docker, CI/CD with Jenkins,
+        and operational scripting on an AWS EC2 instance.
+      </p>
+
+      <div class="grid">
+        <div class="pill">
+          <div class="pill-title">Containerisation</div>
+          <div class="pill-desc">Runs as a Dockerised Apache + PHP service with a separate MySQL container.</div>
+        </div>
+        <div class="pill">
+          <div class="pill-title">CI/CD</div>
+          <div class="pill-desc">Jenkins pipeline builds images, runs lint checks, and executes smoke tests.</div>
+        </div>
+        <div class="pill">
+          <div class="pill-title">Operations</div>
+          <div class="pill-desc">Health check, backup, and smoke test scripts for day‑to‑day operations.</div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a href="/info.php" class="btn btn-primary">View App Info</a>
+        <a href="/about.html" class="btn btn-outline">Learn more</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    DevOps Demo App &middot; Running on Docker inside AWS EC2
+  </footer>
+</body>
+</html>

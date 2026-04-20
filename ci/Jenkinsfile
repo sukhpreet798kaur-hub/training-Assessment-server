@@ -1,0 +1,76 @@
+pipeline {
+    agent any
+
+    environment {
+        APP_ENV = 'ci'
+        APP_NAME = 'DevOps Demo App CI'
+        DB_HOST = 'db'
+        DB_PORT = '3306'
+        DB_NAME = 'demo_app'
+        DB_USER = credentials('db_user')       // Jenkins credentials ID
+        DB_PASSWORD = credentials('db_password')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Lint / Validate') {
+            steps {
+                sh '''
+                  set -e
+                  echo "Validating required env vars..."
+                  [ -n "development" ]
+                  [ -n "Devops Demo App" ]
+                  [ -n "db" ]
+                  [ -n "demo_app" ]
+                  [ -n "demo_user" ]
+                  [ -n "Train123#demo" ]
+
+                  echo "PHP syntax check..."
+                  find app -name "*.php" -print0 | xargs -0 -n1 php -l
+                '''
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh '''
+                  set -e
+                  echo "Building Docker images..."
+                  docker compose -f docker/docker-compose.yml build
+                '''
+            }
+        }
+
+        stage('Smoke Test') {
+            steps {
+                sh '''
+                  set -e
+                  echo "Starting services for smoke tests..."
+                  docker compose -f docker/docker-compose.yml up -d
+                  echo "Waiting for app to start..."
+                  sleep 20
+                  ./scripts/test_smoke.sh
+                '''
+            }
+            post {
+                always {
+                    sh 'docker compose -f docker/docker-compose.yml down'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            when {
+                expression { false } // document real deployment approach here
+            }
+            steps {
+                echo 'Deploy stage placeholder: push image to registry and update target environment.'
+            }
+        }
+    }
+}
