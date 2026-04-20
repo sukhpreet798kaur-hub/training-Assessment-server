@@ -5,12 +5,11 @@ pipeline {
         COMPOSE_FILE = 'docker/docker-compose.yml'
         APP_URL      = 'http://localhost:8081'
 
-        // Database configuration
         DB_HOST      = 'db'
         DB_PORT      = '3306'
         DB_NAME      = 'demo_app'
-        DB_USER      = 'demo_user'                    // non-secret
-        DB_PASSWORD  = credentials('Demo-Assessment') // Jenkins credential ID
+        DB_USER      = 'demo_user'
+        DB_PASSWORD  = credentials('Demo-Assessment')
     }
 
     stages {
@@ -38,21 +37,14 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh '''
-                  set -e
-                  echo "Building Docker images..."
-                  docker compose -f docker/docker-compose.yml build
-                '''
+                sh 'docker compose -f docker/docker-compose.yml build'
             }
         }
 
         stage('Smoke Test') {
             steps {
                 sh '''
-                  set -e
-                  echo "Starting services for smoke tests..."
                   docker compose -f docker/docker-compose.yml up -d
-                  echo "Waiting for app to start..."
                   sleep 20
                   ./scripts/test_smoke.sh
                 '''
@@ -61,15 +53,6 @@ pipeline {
                 always {
                     sh 'docker compose -f docker/docker-compose.yml down'
                 }
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                expression { false } // placeholder; document real deployment later
-            }
-            steps {
-                echo 'Deploy stage placeholder: push image to registry and update target environment.'
             }
         }
     }
