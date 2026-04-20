@@ -3,12 +3,14 @@ pipeline {
 
     environment {
         COMPOSE_FILE = 'docker/docker-compose.yml'
-        App_URL      = 'http://localhost:8081'
+        APP_URL      = 'http://localhost:8081'
+
+        // Database configuration
         DB_HOST      = 'db'
         DB_PORT      = '3306'
         DB_NAME      = 'demo_app'
-        DB_USER      = 'demo_user'       // Jenkins credentials ID
-        DB_PASSWORD  = 'Train123#demo'
+        DB_USER      = 'demo_user'                    // non-secret
+        DB_PASSWORD  = credentials('Demo-Assessment') // Jenkins credential ID
     }
 
     stages {
@@ -23,12 +25,10 @@ pipeline {
                 sh '''
                   set -e
                   echo "Validating required env vars..."
-                  [ -n "development" ]
-                  [ -n "Devops Demo App" ]
-                  [ -n "db" ]
-                  [ -n "demo_app" ]
-                  [ -n "demo_user" ]
-                  [ -n "Train123#demo" ]
+                  [ -n "$DB_HOST" ]
+                  [ -n "$DB_NAME" ]
+                  [ -n "$DB_USER" ]
+                  [ -n "$DB_PASSWORD" ]
 
                   echo "PHP syntax check..."
                   find app -name "*.php" -print0 | xargs -0 -n1 php -l
@@ -66,7 +66,7 @@ pipeline {
 
         stage('Deploy') {
             when {
-                expression { false } // document real deployment approach here
+                expression { false } // placeholder; document real deployment later
             }
             steps {
                 echo 'Deploy stage placeholder: push image to registry and update target environment.'
